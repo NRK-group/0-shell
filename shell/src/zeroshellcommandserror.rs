@@ -1,12 +1,12 @@
 use std::fmt::{Debug, Display};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ZeroShellCommandsError<T: Debug> {
     Cd(T),
     // Exit(T),
     // HelpErr,
     // HistoryErr,
-    // Pwd(T),
+    Pwd(T),
     // Echo,
     // Cat,
     Ls(T),
@@ -20,7 +20,7 @@ impl<T: Debug> std::fmt::Display for ZeroShellCommandsError<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             // ZeroShellCommandsError::Exit(err) => write!(f, "{}", format!("{:?}", err)),
-            // ZeroShellCommandsError::Pwd(err) => write!(f, "{}", format!("{:?}", err)),
+            ZeroShellCommandsError::Pwd(err) => write!(f, "{}", format!("{:?}", err)),
             ZeroShellCommandsError::Ls(err) => write!(f, "{}", format!("{:?}", err)),
             ZeroShellCommandsError::Cd(err) => write!(f, "{}", format!("{:?}", err)),
         }

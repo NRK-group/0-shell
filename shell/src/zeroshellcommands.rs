@@ -10,7 +10,7 @@ use cd::Cd;
 // use help::Help;
 // use history::History;
 use ls::Ls;
-// use pwd::Pwd;
+use pwd::Pwd;
 use std::str::FromStr;
 use unknown::Unknown;
 
@@ -19,7 +19,7 @@ pub enum ZeroShellCommands {
     // Exit(Exit),
     // Help(Help),
     // History(History),
-    // Pwd(Pwd),
+    Pwd(Pwd),
     // Echo,
     // Cat,
     Ls(Ls),
@@ -37,7 +37,7 @@ impl ZeroShellCommands {
             // "exit" => ZeroShellCommands::Exit(Exit::from_str(command)),
             // "help" => ZeroShellCommands::Help(Help::from_str(command)),
             // "history" => ZeroShellCommands::History(History::from_str(command)),
-            // "pwd" => ZeroShellCommands::Pwd(Pwd::from_str(command)),
+            "pwd" => ZeroShellCommands::Pwd(Pwd::from_str(command)),
             "ls" => ZeroShellCommands::Ls(Ls::from_str(command)),
             _ => ZeroShellCommands::Unknown(Unknown::from_str(command)),
         }

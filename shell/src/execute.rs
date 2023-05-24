@@ -11,7 +11,7 @@ impl Execute for ZeroShellCommands {
             // ZeroShellCommands::Exit(exit) => exit.execute(),
             // ZeroShellCommands::Help(help) => help.execute(),
             // ZeroShellCommands::History(history) => history.execute(),
-            // ZeroShellCommands::Pwd(pwd) => pwd.execute(),
+            ZeroShellCommands::Pwd(pwd) => pwd.execute(),
             ZeroShellCommands::Ls(ls) => ls.execute(),
             ZeroShellCommands::Unknown(unknown) => unknown.execute(),
         }
