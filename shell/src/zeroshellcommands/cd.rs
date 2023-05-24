@@ -1,4 +1,4 @@
-use crate::{zeroshellcommandserror::ZeroShellCommandsError, utils::parse_generic_command};
+use crate::{utils::parse_generic_command, zeroshellcommandserror::ZeroShellCommandsError};
 use std::{env, str::FromStr};
 
 #[derive(Debug)]
@@ -13,7 +13,7 @@ impl Cd {
         Self { command, args }
     }
     pub fn execute(&self) -> Result<(), ZeroShellCommandsError<String>> {
-        if &self.args.len() == &1 {
+        if &self.args.len() >= &1 {
             match env::set_current_dir(&self.args[0]) {
                 Ok(_) => {
                     return Ok(());
@@ -43,6 +43,19 @@ impl FromStr for Cd {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_cd() {
+        let cd = Cd::from_str("cd");
+        assert_eq!(cd.command, "cd");
+        assert_eq!(cd.args, Vec::<String>::new());
+    }
+    #[test]
+    fn test_cd_with_args() {
+        let cd = Cd::from_str("cd /tmp");
+        assert_eq!(cd.command, "cd");
+        assert_eq!(cd.args, vec!["/tmp".to_string()]);
+    }
 
     #[test]
     fn test_execute_with_valid_directory() {
