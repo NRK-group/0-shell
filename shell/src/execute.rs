@@ -8,7 +8,7 @@ impl Execute for ZeroShellCommands {
     fn execute(&self) -> Result<(), ZeroShellCommandsError<String>> {
         match self {
             ZeroShellCommands::Cd(cd) => cd.execute(),
-            // ZeroShellCommands::Exit(exit) => exit.execute(),
+            ZeroShellCommands::Exit(exit) => exit.execute(),
             // ZeroShellCommands::Help(help) => help.execute(),
             // ZeroShellCommands::History(history) => history.execute(),
             ZeroShellCommands::Pwd(pwd) => pwd.execute(),

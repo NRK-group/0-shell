@@ -6,7 +6,7 @@ mod ls;
 mod pwd;
 mod unknown;
 use cd::Cd;
-// use exit::Exit;
+use exit::Exit;
 // use help::Help;
 // use history::History;
 use ls::Ls;
@@ -16,7 +16,7 @@ use unknown::Unknown;
 
 pub enum ZeroShellCommands {
     Cd(Cd),
-    // Exit(Exit),
+    Exit(Exit),
     // Help(Help),
     // History(History),
     Pwd(Pwd),
@@ -34,7 +34,7 @@ impl ZeroShellCommands {
     pub fn from_str(command: &str) -> Self {
         match command.split_whitespace().next().unwrap_or("") {
             "cd" => ZeroShellCommands::Cd(Cd::from_str(command)),
-            // "exit" => ZeroShellCommands::Exit(Exit::from_str(command)),
+            "exit" => ZeroShellCommands::Exit(Exit::from_str(command)),
             // "help" => ZeroShellCommands::Help(Help::from_str(command)),
             // "history" => ZeroShellCommands::History(History::from_str(command)),
             "pwd" => ZeroShellCommands::Pwd(Pwd::from_str(command)),
