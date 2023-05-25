@@ -1,7 +1,7 @@
 use crate::{utils::parse_generic_command, zeroshellcommandserror::ZeroShellCommandsError};
 use std::{env, str::FromStr};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Cd {
     pub command: String,
     pub args: Vec<String>,

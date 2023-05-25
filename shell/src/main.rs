@@ -2,10 +2,10 @@ use std::io::{self, Write};
 
 use execute::Execute;
 use zeroshellcommands::ZeroShellCommands;
-mod zeroshellcommandserror;
 mod execute;
 mod utils;
 mod zeroshellcommands;
+mod zeroshellcommandserror;
 fn main() {
     loop {
         print_prompt();

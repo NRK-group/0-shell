@@ -14,6 +14,7 @@ use pwd::Pwd;
 use std::str::FromStr;
 use unknown::Unknown;
 
+#[derive(Debug, PartialEq)]
 pub enum ZeroShellCommands {
     Cd(Cd),
     Exit(Exit),
@@ -49,5 +50,40 @@ impl FromStr for ZeroShellCommands {
 
     fn from_str(command: &str) -> Result<Self, Self::Err> {
         Ok(ZeroShellCommands::from_str(command))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_empty() {
+        assert_eq!(
+            ZeroShellCommands::from_str(""),
+            ZeroShellCommands::Unknown(Unknown::from_str(""))
+        );
+    }
+    #[test]
+    fn test_from_str() {
+        assert_eq!(
+            ZeroShellCommands::from_str("cd"),
+            ZeroShellCommands::Cd(Cd::from_str("cd"))
+        );
+        assert_eq!(
+            ZeroShellCommands::from_str("exit"),
+            ZeroShellCommands::Exit(Exit::from_str("exit"))
+        );
+        assert_eq!(
+            ZeroShellCommands::from_str("pwd"),
+            ZeroShellCommands::Pwd(Pwd::from_str("pwd"))
+        );
+        assert_eq!(
+            ZeroShellCommands::from_str("ls"),
+            ZeroShellCommands::Ls(Ls::from_str("ls"))
+        );
+        assert_eq!(
+            ZeroShellCommands::from_str("unknown"),
+            ZeroShellCommands::Unknown(Unknown::from_str("unknown"))
+        );
     }
 }

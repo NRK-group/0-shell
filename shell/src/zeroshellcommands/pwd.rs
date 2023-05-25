@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 use crate::{utils::parse_generic_command, zeroshellcommandserror::ZeroShellCommandsError};
 
+#[derive(Debug, PartialEq)]
 pub struct Pwd {
     pub command: String,
     pub args: Vec<String>,
