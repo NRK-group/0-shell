@@ -1,7 +1,5 @@
 mod cd;
 mod exit;
-mod help;
-mod history;
 mod ls;
 mod pwd;
 mod unknown;
