@@ -1,48 +1,31 @@
-use std::io::{self, Write};
-
-use execute::Execute;
-use zeroshellcommands::ZeroShellCommands;
-mod execute;
-mod utils;
-mod zeroshellcommands;
-mod zeroshellcommandserror;
-fn main() {
+use rustyline::{error::ReadlineError, DefaultEditor};
+use shell::{cleanup, get_prompt, run_process};
+fn main() -> rustyline::Result<()> {
+    let mut rl = DefaultEditor::new().unwrap();
+    let dir = std::env::var("HOME").unwrap_or(".".to_string()) + "/.zero_shell_history";
+    if rl.load_history(&dir).is_err() {
+        println!("No previous history.");
+    }
     loop {
-        print_prompt();
-        let mut input = String::new();
-
-        match io::stdin().read_line(&mut input) {
-            Ok(0) => {
-                // Reached EOF (Ctrl + D)
+        let readline = rl.readline(&get_prompt());
+        rl.save_history(&dir)?;
+        match readline {
+            Ok(line) => {
+                rl.add_history_entry(line.clone())?;
+                run_process(&line).unwrap();
+            }
+            Err(ReadlineError::Interrupted) => {
+                continue;
+            }
+            Err(ReadlineError::Eof) => {
                 break;
             }
-            Ok(_) => {
-                // Process the user input
-                match ZeroShellCommands::from_str(&input).execute() {
-                    Ok(_) => {}
-                    Err(error) => {
-                        error.handle_error();
-                        continue;
-                    }
-                }
-            }
-            Err(error) => {
-                eprintln!("Error reading input: {}", error);
-                continue;
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
             }
         }
     }
-
     // Clean up any resources or processes before exiting
     cleanup();
-    // Ok(())
-}
-
-fn print_prompt() {
-    print!("$ ");
-    io::stdout().flush().unwrap();
-}
-fn cleanup() {
-    // Perform any necessary cleanup actions here
-    println!("Cleaning up...");
 }

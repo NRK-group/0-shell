@@ -1,0 +1,100 @@
+use crate::{cleanup, command::*};
+use std::path::{Path, PathBuf};
+pub fn run_process(command: &str) -> Result<(), ()> {
+    let command = Command::new(command);
+    match run_shell_internal(&command) {
+        Ok(()) => return Ok(()),
+        Err(()) => {}
+    }
+
+    let bin = match find_binary(&command) {
+        Ok(bin) => bin,
+        Err(_) => {
+            println!("Command not found {:?}", &command);
+            return Ok(());
+        }
+    };
+
+    let mut child = std::process::Command::new(bin)
+        .args(command.0.split_whitespace().skip(1))
+        .envs(std::env::vars())
+        .spawn()
+        .expect("Failed to execute command");
+
+    let status = child.wait().expect("Failed to wait for command");
+    if !status.success() {
+        println!(
+            "Command failed with exit code: {}",
+            status.code().unwrap_or(-1)
+        );
+    }
+
+    Ok(())
+}
+
+pub fn run_shell_internal(command: &Command) -> Result<(), ()> {
+    match command.bin_path() {
+        "cd" => {
+            let path = match command.0.split_whitespace().nth(1) {
+                Some(path) => path,
+                None => {
+                    let home_dir = std::env::var("HOME").unwrap_or(".".to_string());
+                    std::env::set_current_dir(home_dir).unwrap();
+                    return Ok(());
+                }
+            };
+
+            if let Err(err) = std::env::set_current_dir(path) {
+                eprintln!("Error: {}", err);
+            }
+            Ok(())
+        }
+        "exit" => {
+            cleanup();
+        }
+        _ => Err(()), // Not a shell internal command
+    }
+}
+
+fn find_binary(command: &Command) -> Result<PathBuf, std::io::Error> {
+    fn search(target: &str, path: &Path) -> Result<(), std::io::Error> {
+        for entry in path.read_dir()? {
+            let entry = entry?;
+            let path = entry.path();
+            if path.is_dir() {
+                search(target, &path)?;
+            } else if path.is_file() {
+                if let Some(filename) = path.file_name() {
+                    if filename == target {
+                        if path.is_symlink() {
+                            let path = path.read_link()?;
+                            return search(target, &path);
+                        } else {
+                            return Ok(());
+                        }
+                    }
+                }
+            }
+        }
+        Err(std::io::ErrorKind::NotFound.into())
+    }
+
+    let target = command.bin_path();
+
+    if let Ok(mut dir) = std::env::current_dir() {
+        if let Ok(()) = search(target, &dir) {
+            dir.push(target);
+            return Ok(dir);
+        }
+    }
+
+    for entry in std::env::var("PATH").unwrap_or(String::new()).split(":") {
+        let mut path = PathBuf::from(entry);
+        if let Ok(()) = search(target, &path) {
+            path.push(target);
+            return Ok(path);
+        }
+    }
+
+    Err(std::io::ErrorKind::NotFound.into())
+}
