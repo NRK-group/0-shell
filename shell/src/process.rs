@@ -1,10 +1,11 @@
 use crate::{cleanup, command::*};
 use std::path::{Path, PathBuf};
 
-// 
+//
 pub fn run_process(command: &str) -> Result<(), ()> {
     if let Ok(zc) = ZeroShellCommands::from_str(&command) {
         zc.execute().unwrap();
+        return Ok(());
     }
 
     let command = Command::new(command);

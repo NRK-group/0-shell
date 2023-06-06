@@ -26,7 +26,9 @@ impl Cd {
         }
         let home_dir = env::var("HOME").unwrap_or(String::new());
         match env::set_current_dir(home_dir) {
-            Ok(_) => Ok(()),
+            Ok(_) => {
+                return Ok(());
+            }
             Err(err) => {
                 return Err(ZeroShellCommandsError::Cd(err.to_string()));
             }
