@@ -1,11 +1,13 @@
 use crate::{cleanup, command::*};
 use std::path::{Path, PathBuf};
+
+// 
 pub fn run_process(command: &str) -> Result<(), ()> {
-    let command = Command::new(command);
-    match run_shell_internal(&command) {
-        Ok(()) => return Ok(()),
-        Err(()) => {}
+    if let Ok(zc) = ZeroShellCommands::from_str(&command) {
+        zc.execute().unwrap();
     }
+
+    let command = Command::new(command);
 
     let bin = match find_binary(&command) {
         Ok(bin) => bin,
@@ -30,30 +32,6 @@ pub fn run_process(command: &str) -> Result<(), ()> {
     }
 
     Ok(())
-}
-
-pub fn run_shell_internal(command: &Command) -> Result<(), ()> {
-    match command.bin_path() {
-        "cd" => {
-            let path = match command.0.split_whitespace().nth(1) {
-                Some(path) => path,
-                None => {
-                    let home_dir = std::env::var("HOME").unwrap_or(".".to_string());
-                    std::env::set_current_dir(home_dir).unwrap();
-                    return Ok(());
-                }
-            };
-
-            if let Err(err) = std::env::set_current_dir(path) {
-                eprintln!("Error: {}", err);
-            }
-            Ok(())
-        }
-        "exit" => {
-            cleanup();
-        }
-        _ => Err(()), // Not a shell internal command
-    }
 }
 
 fn find_binary(command: &Command) -> Result<PathBuf, std::io::Error> {
@@ -97,4 +75,17 @@ fn find_binary(command: &Command) -> Result<PathBuf, std::io::Error> {
     }
 
     Err(std::io::ErrorKind::NotFound.into())
+}
+
+pub trait Execute {
+    fn execute(&self) -> Result<(), ZeroShellCommandsError<String>>;
+}
+
+impl Execute for ZeroShellCommands {
+    fn execute(&self) -> Result<(), ZeroShellCommandsError<String>> {
+        match self {
+            ZeroShellCommands::Cd(cd) => cd.execute(),
+            ZeroShellCommands::Exit => cleanup(),
+        }
+    }
 }
