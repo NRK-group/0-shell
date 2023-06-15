@@ -86,6 +86,7 @@ impl Execute for ZeroShellCommands {
     fn execute(&self) -> Result<(), ZeroShellCommandsError<String>> {
         match self {
             ZeroShellCommands::Cd(cd) => cd.execute(),
+            ZeroShellCommands::Ls(ls) => ls.execute(),
             ZeroShellCommands::Exit => cleanup(),
         }
     }

@@ -35,3 +35,35 @@ impl Cd {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cd() {
+        let cd = Cd::from_str("cd");
+        // assert_eq!(cd., "cd");
+        assert_eq!(cd.path, String::new());
+    }
+    #[test]
+    fn test_cd_with_args() {
+        let cd = Cd::from_str("cd /tmp");
+        assert_eq!(cd.path, "/tmp".to_string());
+    }
+
+    #[test]
+    fn test_execute_with_valid_directory() {
+        let cd = Cd::from_str("cd /tmp");
+        let result = cd.execute();
+        assert!(result.is_ok(), "Expected Ok result");
+    }
+
+    #[test]
+    fn test_execute_with_invalid_directory() {
+        let cd = Cd::from_str("cd /nonexistent");
+        println!("{:?}", cd);
+        let result = cd.execute();
+        assert!(result.is_err(), "Expected Err result");
+    }
+}
