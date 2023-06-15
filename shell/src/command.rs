@@ -3,11 +3,13 @@ mod cd;
 mod echo;
 mod ls;
 mod pwd;
+mod rm;
 use crate::command::cat::Cat;
 use crate::command::cd::Cd;
 use crate::command::echo::Echo;
 use crate::command::ls::Ls;
 use crate::command::pwd::Pwd;
+use crate::command::rm::Rm;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -30,6 +32,7 @@ pub enum ZeroShellCommands {
     Pwd(Pwd),
     Cat(Cat),
     Echo(Echo),
+    Rm(Rm),
     Exit,
 }
 impl ZeroShellCommands {
@@ -40,6 +43,7 @@ impl ZeroShellCommands {
             "pwd" => Ok(ZeroShellCommands::Pwd(Pwd::from_str(command))),
             "cat" => Ok(ZeroShellCommands::Cat(Cat::from_str(command))),
             "echo" => Ok(ZeroShellCommands::Echo(Echo::from_str(command))),
+            "rm" => Ok(ZeroShellCommands::Rm(Rm::from_str(command))),
             "exit" => Ok(ZeroShellCommands::Exit),
             _ => {
                 println!("{}", format!("{}: command not found", command));
@@ -63,5 +67,6 @@ pub enum ZeroShellCommandsError<T> {
     Pwd(T),
     Cat(T),
     Echo(T),
+    Rm(T),
     Unknown,
 }

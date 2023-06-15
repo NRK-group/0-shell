@@ -6,7 +6,7 @@
 - [x] pwd
 - [x] cat
 - [ ] cp
-- [ ] rm
+- [x] rm
 - [ ] mv
 - [ ] mkdir
 - [x] exit
