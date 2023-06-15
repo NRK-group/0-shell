@@ -87,6 +87,7 @@ impl Execute for ZeroShellCommands {
         match self {
             ZeroShellCommands::Cd(cd) => cd.execute(),
             ZeroShellCommands::Ls(ls) => ls.execute(),
+            ZeroShellCommands::Pwd(pwd) => pwd.execute(),
             ZeroShellCommands::Exit => cleanup(),
         }
     }

@@ -1,7 +1,9 @@
 mod cd;
 mod ls;
+mod pwd;
 use crate::command::cd::Cd;
 use crate::command::ls::Ls;
+use crate::command::pwd::Pwd;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -21,6 +23,7 @@ impl<'c> Command<'c> {
 pub enum ZeroShellCommands {
     Cd(Cd),
     Ls(Ls),
+    Pwd(Pwd),
     Exit,
 }
 impl ZeroShellCommands {
@@ -28,8 +31,12 @@ impl ZeroShellCommands {
         match command.split_whitespace().next().unwrap_or("") {
             "cd" => Ok(ZeroShellCommands::Cd(Cd::from_str(command))),
             "ls" => Ok(ZeroShellCommands::Ls(Ls::from_str(command))),
+            "pwd" => Ok(ZeroShellCommands::Pwd(Pwd::from_str(command))),
             "exit" => Ok(ZeroShellCommands::Exit),
-            _ => Err(ZeroShellCommandsError::Unknown),
+            _ => {
+                println!("{}", format!("{}: command not found", command));
+                return Err(ZeroShellCommandsError::Unknown);
+            }
         }
     }
 }
@@ -41,9 +48,10 @@ impl FromStr for ZeroShellCommands {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum ZeroShellCommandsError<T> {
     Cd(T),
     Ls(T),
+    Pwd(T),
     Unknown,
 }
