@@ -1,6 +1,6 @@
 # Command
 
-- [ ] echo
+- [x] echo
 - [x] cd
 - [x] ls
 - [x] pwd

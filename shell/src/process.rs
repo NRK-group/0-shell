@@ -89,6 +89,7 @@ impl Execute for ZeroShellCommands {
             ZeroShellCommands::Ls(ls) => ls.execute(),
             ZeroShellCommands::Pwd(pwd) => pwd.execute(),
             ZeroShellCommands::Cat(cat) => cat.execute(),
+            ZeroShellCommands::Echo(echo) => echo.execute(),
             ZeroShellCommands::Exit => cleanup(),
         }
     }
