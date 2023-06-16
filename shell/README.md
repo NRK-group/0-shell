@@ -5,7 +5,7 @@
 - [x] ls
 - [x] pwd
 - [x] cat
-- [ ] cp
+- [x] cp
 - [x] rm
 - [ ] mv
 - [ ] mkdir
