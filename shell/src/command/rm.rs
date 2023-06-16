@@ -41,7 +41,7 @@ impl Rm {
                 eprintln!("{}: is a directory", file);
                 continue;
             } else if path.is_dir() && self.options.contains(&"-r".to_string()) {
-                match std::fs::remove_dir(file) {
+                match std::fs::remove_dir_all(file) {
                     Ok(_) => {}
                     Err(err) => {
                         eprintln!("{}", err);
