@@ -7,7 +7,7 @@
 - [x] cat
 - [x] cp
 - [x] rm
-- [ ] mv
+- [x] mv
 - [ ] mkdir
 - [x] exit
 - [x] Ctrl + D
