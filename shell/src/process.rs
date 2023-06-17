@@ -93,6 +93,7 @@ impl Execute for ZeroShellCommands {
             ZeroShellCommands::Rm(rm) => rm.execute(),
             ZeroShellCommands::Cp(cp) => cp.execute(),
             ZeroShellCommands::Mkdir(mkdir) => mkdir.execute(),
+            ZeroShellCommands::Mv(mv) => mv.execute(),
             ZeroShellCommands::Exit => cleanup(),
         }
     }

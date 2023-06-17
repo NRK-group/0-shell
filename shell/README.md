@@ -8,6 +8,6 @@
 - [x] cp
 - [x] rm
 - [x] mv
-- [ ] mkdir
+- [x] mkdir
 - [x] exit
 - [x] Ctrl + D
